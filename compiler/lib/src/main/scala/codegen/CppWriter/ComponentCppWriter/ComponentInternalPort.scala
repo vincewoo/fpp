@@ -75,28 +75,28 @@ case class ComponentInternalPort (
           intersperseBlankLines(
             List(
               lines(
-                s"""|ComponentIpcSerializableBuffer msg;
-                    |Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
-                    |
-                    |// Serialize the message ID
-                    |_status = msg.serialize(static_cast<FwEnumStoreType>(${internalPortCppConstantName(p)}));
-                    |FW_ASSERT (
-                    |  _status == Fw::FW_SERIALIZE_OK,
-                    |  static_cast<FwAssertArgType>(_status)
-                    |);
-                    |
-                    |// Fake port number to make message dequeue work
-                    |_status = msg.serialize(static_cast<FwIndexType>(0));
-                    |FW_ASSERT (
-                    |  _status == Fw::FW_SERIALIZE_OK,
-                    |  static_cast<FwAssertArgType>(_status)
-                    |);
-                    |"""
+                            s"""|ComponentIpcSerializableBuffer msg;
+                |Fw::SerializeStatus _status = Fw::FW_SERIALIZE_OK;
+                |
+                |// Serialize the message ID
+                |_status = msg.serializeFrom(static_cast<FwEnumStoreType>(${internalPortCppConstantName(p)}));
+                |FW_ASSERT (
+                |  _status == Fw::FW_SERIALIZE_OK,
+                |  static_cast<FwAssertArgType>(_status)
+                |);
+                |
+                |// Fake port number to make message dequeue work
+                |_status = msg.serializeFrom(static_cast<FwIndexType>(0));
+                |FW_ASSERT (
+                |  _status == Fw::FW_SERIALIZE_OK,
+                |  static_cast<FwAssertArgType>(_status)
+                |);
+                |"""
               ),
               intersperseBlankLines(
                 getPortParams(p).map((n, _, _) =>
                   lines(
-                    s"""|_status = msg.serialize($n);
+                    s"""|_status = msg.serializeFrom($n);
                         |FW_ASSERT(
                         |  _status == Fw::FW_SERIALIZE_OK,
                         |  static_cast<FwAssertArgType>(_status)
